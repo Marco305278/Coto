@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.png" type="image/png">
     <title>Remote connection</title>
 
         <!-- Firebase Compat Scripts -->
@@ -15,6 +16,7 @@
 
         body{
             background: black;
+            overflow-x: hidden;
         }
         a{
             color: gray;
@@ -35,6 +37,7 @@
             transition: 0.15s ease-in-out;
             outline: none!important;
             min-width: 150px;
+            backdrop-filter: blur(5px);
         }
         input{
             width: 100%;
@@ -47,8 +50,8 @@
         }
         .button.red:hover{
             color: black;
-            border: 1px solid rgb(189, 80, 80);
-            background: rgb(211, 68, 68);
+            border: 1px solid rgb(204, 85, 85);
+            background: rgba(211, 68, 68, 0.8);
             cursor: pointer;
         }
         .col{
@@ -85,6 +88,8 @@
             color: gray;
             line-height: 1.5;
             word-break: break-all;
+            text-shadow: 2px 2px 4px black;
+            backdrop-filter: blur(1.8px);
         }
         .advice {
             width: 320px;
@@ -100,6 +105,10 @@
     </style>
 </head>
 <body>
+
+    <div style="position: absolute; z-index: -1; width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center;">
+        <img src="back.png" alt="background" style="height: 100vh; width: auto; min-height: 750px;">
+    </div>
 
     <div class="col">
         <div class="advice" id="advice"><p id="advicetext"></p></div>
@@ -179,7 +188,7 @@
                             adviceContainer.style.top = "-50px";
                             adviceTexts.innerHTML = "";
                             database.ref("advice").set("")
-                        }, 4000);
+                        }, 2000);
                     }
                 });
             }
