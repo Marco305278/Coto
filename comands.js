@@ -17,24 +17,53 @@
 
         document.getElementById('play').onclick = function sendComand() {
             var comands = document.getElementById('comand').value;
-            database.ref(`comands`).set(comands)
-            const commandLine = document.createElement("div");
-            commandLine.classList.add("line");
-            const commandText = document.createElement("p");
-            commandText.classList.add("comands");
-            commandText.id = "comands";
-            commandText.textContent = "> " + comands;
+            if (comands !== "") {
+                database.ref(`comands`).set(comands)
+                const commandLine = document.createElement("div");
+                commandLine.classList.add("line");
+                const commandText = document.createElement("p");
+                commandText.classList.add("comands");
+                commandText.id = "comands";
+                commandText.textContent = "> " + comands;
 
-            const container = document.getElementById('container');
-            container.appendChild(commandLine);
-            commandLine.appendChild(commandText);
+                const container = document.getElementById('container');
+                container.appendChild(commandLine);
+                commandLine.appendChild(commandText);
+                const input = document.getElementById('comand');
+                input.value = ""
+            }
         };
+
+        document.addEventListener('DOMContentLoaded', function() {
+
+            function syncOutput() {
+                database.ref('output').on('value', function(snapshot) {
+                    if (snapshot.val() !== "") {
+                        const commandLine = document.createElement("div");
+                        commandLine.classList.add("line");
+                        const commandText = document.createElement("p");
+                        commandText.classList.add("texts");
+                        commandText.id = "texts";
+                        commandText.textContent =  snapshot.val();
+            
+                        const container = document.getElementById('container');
+                        container.appendChild(commandLine);
+                        commandLine.appendChild(commandText);
+
+                        database.ref(`output`).set("")
+                    }
+                });
+            }
+
+            syncOutput()
+        });
+        
 
         document.addEventListener('DOMContentLoaded', function() {
             const buttonReset = document.getElementById('reset');
             
             buttonReset.addEventListener('click', function() {
-                    database.ref(`comands`).set("")
+                    database.ref(`comands`).set("-stop")
                     database.ref(`output`).set("")
                     const comands = document.getElementById('comand');
                     comands.value = ""
@@ -42,25 +71,3 @@
                     container.innerHTML = "";
                 });
         });
-
-        document.addEventListener('DOMContentLoaded', function() {
-
-            function syncOutput() {
-                database.ref('output').on('value', function(snapshot) {
-                    const commandLine = document.createElement("div");
-                    commandLine.classList.add("line");
-                    const commandText = document.createElement("p");
-                    commandText.classList.add("texts");
-                    commandText.id = "texts";
-                    commandText.textContent =  snapshot.val();
-        
-                    const container = document.getElementById('container');
-                    container.appendChild(commandLine);
-                    commandLine.appendChild(commandText);
-
-                    database.ref(`output`).set("")
-                });
-            }
-
-            syncOutput()
-        })
