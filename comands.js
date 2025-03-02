@@ -29,8 +29,6 @@
                 const container = document.getElementById('container');
                 container.appendChild(commandLine);
                 commandLine.appendChild(commandText);
-                const input = document.getElementById('comand');
-                input.value = ""
             }
         };
 
@@ -38,22 +36,19 @@
 
             function syncOutput() {
                 database.ref('output').on('value', function(snapshot) {
-                    if (snapshot.val() !== "") {
+                    const outputHTML = snapshot.val();
+                    if (outputHTML !== "") {
                         const commandLine = document.createElement("div");
                         commandLine.classList.add("line");
-                        const commandText = document.createElement("p");
-                        commandText.classList.add("texts");
-                        commandText.id = "texts";
-                        commandText.textContent =  snapshot.val();
+                        commandLine.innerHTML = outputHTML;
             
                         const container = document.getElementById('container');
                         container.appendChild(commandLine);
-                        commandLine.appendChild(commandText);
-
-                        database.ref(`output`).set("")
+            
+                        database.ref('output').set("");
                     }
                 });
-            }
+            }            
 
             syncOutput()
         });
@@ -63,7 +58,7 @@
             const buttonReset = document.getElementById('reset');
             
             buttonReset.addEventListener('click', function() {
-                    database.ref(`comands`).set("-stop")
+                    database.ref(`comands`).set("")
                     database.ref(`output`).set("")
                     const comands = document.getElementById('comand');
                     comands.value = ""
