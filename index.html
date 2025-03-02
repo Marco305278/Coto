@@ -19,7 +19,6 @@
             overflow-x: hidden;
         }
         a{
-            color: gray;
             font-size: 12px;
         }
         *{
@@ -68,7 +67,7 @@
             padding: 20px;
         }
         .container_reset{
-            position: absolute;
+            position: fixed;
             color: white;
             bottom: 0;
             right: 0;
@@ -90,6 +89,7 @@
             word-break: break-all;
             text-shadow: 2px 2px 4px black;
             backdrop-filter: blur(1.8px);
+            margin-bottom: 80px;
         }
         .advice {
             width: 320px;
@@ -102,17 +102,32 @@
             top: -50px;
             transition: opacity 0.5s ease-in-out, top 0.5s ease-in-out;
         }
+        .button-console {
+            text-decoration: underline;
+            position: fixed;
+            bottom: 0;
+            text-align: center;
+            padding: 10px;
+        }
+        .button-console a{
+            color: white;
+            transition: 0.15s ease-in-out;
+        }
+        .button-console a:hover{
+            color: gray;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
 
-    <div style="position: absolute; z-index: -1; width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center;">
+    <div style="position: fixed; z-index: -1; width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center;">
         <img src="back.png" alt="background" style="height: 100vh; width: auto; min-height: 750px;">
     </div>
 
     <div class="col">
         <div class="advice" id="advice"><p id="advicetext"></p></div>
-        <div class="line" style="justify-content: center;"><div style="width: 12px; height: 12px; background: gray; border-radius: 12px; transform: translate(-5px, 2px);"></div><a href="vncviewer.exe">vncviewer.exe -listen 4444</a></div>
+        <div class="line" style="justify-content: center;"><div style="width: 12px; height: 12px; background: gray; border-radius: 12px; transform: translate(-5px, 2px);"></div><a href="vncviewer.exe" style="color: gray;">vncviewer.exe -listen 4444</a></div>
         <div class="line">
             <button class="button red" id="stop"><p>Ferma</p></button>
             <button class="button" id="connect"><p>Connettiti</p></button>
@@ -123,109 +138,13 @@
         <div class="line"><p class="texts" id="texts"></p></div>
     </div>
 
+    <div style="position: fixed; width: 100%; display: flex; justify-content: center;">
+        <div class="button-console"><a href="console.html">Apri console</a></div>
+    </div>
+
     <div class="container_reset" id="reset"><p>reset</p></div>
 
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
-      
-        // Your web app's Firebase configuration
-        const firebaseConfig = {
-          apiKey: "AIzaSyD6yH5SK3cZ53zUKy9o8JDUA8E6M2ciS8w",
-          authDomain: "python---app.firebaseapp.com",
-          databaseURL: "https://python---app-default-rtdb.europe-west1.firebasedatabase.app",
-          projectId: "python---app",
-          storageBucket: "python---app.firebasestorage.app",
-          messagingSenderId: "935345912292",
-          appId: "1:935345912292:web:148df16e83db170c086ff1"
-        };
-      
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        document.getElementById('ipaddress').oninput = function saveipaddress() {
-            var ipAddress = this.value;
-            database.ref(`ip`).set(ipAddress)
-        };
-
-        document.addEventListener('DOMContentLoaded', function() {
-            function syncIpAddress() {
-                database.ref('ip').on('value', function(snapshot) {
-                    const input = document.getElementById('ipaddress');
-                    const ipAddress = snapshot.val();
-                    if (input && ipAddress !== null) {
-                        input.value = ipAddress;
-                    }
-                });
-            }
-
-            function syncTexts() {
-                database.ref(`texts`).on('value', function(snapshot) {
-                    const textsParagraph = document.getElementById('texts');
-                    const texts = snapshot.val();
-                    if (texts) {
-                        textsParagraph.innerHTML = texts;
-                    }
-                });
-            }
-
-            function syncAdvice() {
-                database.ref('advice').on('value', function(snapshot) {
-                    const adviceContainer = document.getElementById('advice');
-                    const adviceTexts = document.getElementById('advicetext');
-                    const advice = snapshot.val();
-                    
-                    if (advice === "") {
-                        adviceContainer.style.opacity = "0";
-                        adviceContainer.style.top = "-50px";
-                    } else {
-                        adviceContainer.style.opacity = "1";
-                        adviceContainer.style.top = "20px";
-                        adviceTexts.innerHTML = advice;
-                        
-                        setTimeout(function() {
-                            adviceContainer.style.opacity = "0";
-                            adviceContainer.style.top = "-50px";
-                            adviceTexts.innerHTML = "";
-                            database.ref("advice").set("")
-                        }, 2000);
-                    }
-                });
-            }
-
-
-
-            syncIpAddress();
-            syncTexts();
-            syncAdvice();
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const buttonConnect = document.getElementById('connect');
-                buttonConnect.addEventListener('click', function() {
-                    database.ref(`enabled_script`).set(true)
-                });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const buttonStop = document.getElementById('stop');
-                buttonStop.addEventListener('click', function() {
-                    database.ref(`enabled_close`).set(true)
-                });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const buttonReset = document.getElementById('reset');
-            const textsParagraph = document.getElementById('texts'); 
-            buttonReset.addEventListener('click', function() {
-                    database.ref(`enabled_script`).set(false)
-                    database.ref(`enabled_close`).set(false)
-                    database.ref(`texts`).set("")
-                    textsParagraph.innerHTML = "";
-                });
-        });
-
-    </script>
+    <script src="script.js" type="module"></script>
 
 </body>
 </html>
