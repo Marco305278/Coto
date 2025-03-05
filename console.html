@@ -38,6 +38,18 @@
             backdrop-filter: blur(5px);
             margin-bottom: 200px;
         }
+        .connected {
+            width: calc(100% - 12px);
+            height: calc(100vh - 12px);
+            border: 6px solid rgba(144, 238, 144, 0.327);
+            color: rgba(144, 238, 144, 0.426);
+            text-align: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out, top 0.5s ease-in-out;
+        }
         textarea{
             width: 100%;
             font-size: 14px;
@@ -128,6 +140,10 @@
 
     <div style="position: fixed; z-index: -1; width: 100%; height: 100vh; display: flex; justify-content: center; align-items: center;">
         <img src="back.png" alt="background" style="height: 100vh; width: auto; min-height: 750px;">
+    </div>
+
+    <div style="width: 100%; height: 100vh; position: fixed; z-index: -1;">
+        <div class="connected" id="connected"><p style="padding: 10px;">Connected - <h id="date"></h></p></div>
     </div>
 
     <div class="col">

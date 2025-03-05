@@ -59,13 +59,42 @@
                             adviceContainer.style.opacity = "0";
                             adviceContainer.style.top = "-50px";
                             adviceTexts.innerHTML = "";
+                            setTimeout(5000)
                             database.ref("advice").set("")
                         }, 2000);
                     }
                 });
             }
 
-
+            function syncDate() {
+                const connectContainer = document.getElementById('connected');
+                const dateText = document.getElementById('date');
+                database.ref('date').once('value').then(function(snapshot) {
+                    const connect = snapshot.val();
+                    
+                    const connectDate = new Date(connect);
+                    const now = new Date();
+                    const diffMs = now - connectDate;
+                    
+                    dateText.innerHTML = connectDate.toLocaleTimeString('it-IT', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                      });
+                    
+                    if(diffMs <= 5500) {
+                        connectContainer.style.opacity = "1";
+                        connectTexts.innerHTML = connect;
+                    } else {
+                        connectContainer.style.opacity = "0";
+                    }
+                }).catch(function(error) {
+                    console.error("Errore nel recupero della data:", error);
+                });
+            }
+            
+            syncDate()
+            setInterval(syncDate, 2000);
 
             syncIpAddress();
             syncTexts();
