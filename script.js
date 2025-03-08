@@ -16,18 +16,43 @@
         const database = firebase.database();
 
         document.getElementById('ipaddress').oninput = function saveipaddress() {
-            var ipAddress = this.value;
-            database.ref(`ip`).set(ipAddress)
+            var input = this.value;
+            const [id2, ip2] = input.split('-');
+            database.ref(`id2`).set(id2)
+            database.ref(`ip2`).set(ip2)
         };
 
         document.addEventListener('DOMContentLoaded', function() {
             function syncIpAddress() {
-                database.ref('ip').on('value', function(snapshot) {
-                    const input = document.getElementById('ipaddress');
-                    const ipAddress = snapshot.val();
-                    if (input && ipAddress !== null) {
-                        input.value = ipAddress;
+                const input = document.getElementById('ipaddress');
+                const id2Ref = database.ref('id2');
+                const ip2Ref = database.ref('ip2');
+
+                id2Ref.once('value')
+                .then(function(id2Snapshot) {
+                    const id2 = id2Snapshot.val();
+                    if (id2 === null) {
+                        throw new Error("Valore 'id2' non trovato nel database.");
                     }
+                    return id2;
+                })
+                // Recupera il valore di 'ip2' e combina i valori
+                .then(function(id2) {
+                    return ip2Ref.once('value')
+                        .then(function(ip2Snapshot) {
+                            const ip2 = ip2Snapshot.val();
+                            if (ip2 === null) {
+                                throw new Error("Valore 'ip2' non trovato nel database.");
+                            }
+                            return id2 + '-' + ip2;
+                        });
+                })
+                // Aggiorna l'elemento di input
+                .then(function(combinedValue) {
+                    input.value = combinedValue;
+                })
+                .catch(function(error) {
+                    console.error("Errore durante la sincronizzazione dell'indirizzo IP:", error);
                 });
             }
 
