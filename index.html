@@ -20,7 +20,6 @@
         }
         a{
             font-size: 12px;
-            text-decoration: none;
         }
         *{
             margin: 0;
@@ -39,14 +38,34 @@
             min-width: 150px;
             backdrop-filter: blur(5px);
         }
+        .buttonmax,
+        textarea{
+            color: white;
+            border: 1px solid white;
+            background: none;
+            padding: 12px 18px;
+            transition: 0.15s ease-in-out;
+            outline: none!important;
+            backdrop-filter: blur(5px);
+            margin-bottom: 200px;
+        }
+        textarea{
+            width: 100%;
+            font-size: 14px;
+            resize: none;
+        }
         input{
             width: 100%;
             text-align: center;
         }
-        .button:hover{
+        .button:hover,
+        .buttonmax:hover{
             color: black;
             background: white;
             cursor: pointer;
+        }
+        .button:active {
+            opacity: 0.6;
         }
         .button.red:hover{
             color: black;
@@ -66,6 +85,12 @@
             justify-content: space-between;
             width: 350px;
             padding: 20px;
+        }
+        .linemax{
+            display: flex;
+            justify-content: space-between;
+            min-width: 350px;
+            width: calc(100% - 160px);
         }
         .container_reset{
             position: fixed;
@@ -92,6 +117,19 @@
             backdrop-filter: blur(1.8px);
             margin-bottom: 80px;
         }
+        .output{
+            font-size: 12px;
+            color: gray;
+            line-height: 1.5;
+            text-shadow: 2px 2px 4px black;
+            backdrop-filter: blur(2.5px);
+            padding: 0 14px 20px 14px;
+        }
+        .comands{
+            font-size: 12px;
+            color: white;
+            padding: 10px 14px 10px 0;
+        }
         .advice {
             width: 320px;
             padding: 20px;
@@ -101,18 +139,6 @@
             position: absolute;
             opacity: 0;
             top: -50px;
-            transition: opacity 0.5s ease-in-out, top 0.5s ease-in-out;
-        }
-        .connected {
-            width: calc(100% - 12px);
-            height: calc(100vh - 12px);
-            border: 6px solid rgba(144, 238, 144, 0.327);
-            color: rgba(144, 238, 144, 0.426);
-            text-align: center;
-            position: fixed;
-            top: 0;
-            left: 0;
-            opacity: 0;
             transition: opacity 0.5s ease-in-out, top 0.5s ease-in-out;
         }
         .pc-names{
@@ -140,7 +166,7 @@
             padding: 10px;
         }
         .button-console a{
-            margin: 0 8px;
+            margin: 0 12px;
             color: white;
             transition: 0.15s ease-in-out;
         }
@@ -150,16 +176,25 @@
         }
         .cont{
             padding: 5px;
-            background: rgb(61, 61, 61);
+            background: rgb(20, 20, 20);
             margin: 0 5px;
             transition: 0.15s ease-in-out;
             border: 1px solid rgb(85, 85, 85);
             display: flex;
             align-items:end;
         }
-        .cont.sel{
-            background: rgb(20, 20, 20);
+        .sel .cont{
+            background: rgb(63, 63, 63);
+            border: 1px solid rgb(100, 100, 100);
         }
+        .sel.conn .cont{
+            background: rgba(76, 100, 69, 0.815);
+            border: 1px solid rgba(145, 255, 145, 0.308);
+        }
+        .conn .cont{
+            background: rgb(27, 36, 25);
+            border: 1px solid rgb(64, 83, 63);
+        } 
         .cont:hover{
             opacity: 0.6;
             cursor: pointer;
@@ -181,9 +216,9 @@
         <div class="connected" id="connected"><p style="padding: 10px;">Connected - <h id="date"></h></p></div>
     </div>
 
-    <div class="col" id="connected-opacity">
+    <div class="col" id="home">
         <div class="advice" id="advice"><p id="advicetext"></p></div>
-        <div class="line" style="justify-content: center;"><div style="width: 12px; height: 12px; background: gray; border-radius: 12px; transform: translate(-5px, 2px);"></div><a href="vncviewer.exe" style="color: gray;">vncviewer.exe -listen 4444</a></div>
+        <div class="line" style="justify-content: center;"><div style="width: 12px; height: 12px; background: gray; border-radius: 12px; transform: translate(-5px, 2px);"></div><a href="vncviewer.exe" style="color: gray;">vncviewer.exe 204.216.211.165:5500</a></div>
         <div class="line">
             <button class="button red" id="stop"><p>Ferma</p></button>
             <button class="button" id="connect"><p>Connettiti</p></button>
@@ -194,14 +229,26 @@
         <div class="line"><p class="texts" id="texts"></p></div>
     </div>
 
+    <div class="col" style="padding-top: 10vh; width: 100%; display: none;" id="comands">
+        <div class="advice" id="advice"><p id="advicetext"></p></div>
+
+        <div style="backdrop-filter: blur(1.8px); width: calc(100% - 160px);" id="container">
+        </div>
+
+        <div class="linemax">
+            <textarea type="text" name="comand" id="comand"></textarea>
+            <button class="buttonmax" id="play"><p>></p></button>
+        </div>
+    </div>
+
     <div style="position: fixed; width: 100%; display: flex; justify-content: center;">
-        <div class="button-console"><a href="console.html">Apri console</a><a href="http://204.216.211.165/" target="_blank">Apri repeater</a></div>
+        <div class="button-console"><a href="#" id="change-screen">Cambia scheda</a><a href="http://204.216.211.165/" target="_blank">Apri repeater</a></div>
     </div>
 
     <div style="position: fixed; width: 100%; display: flex; justify-content: right;">
         <div class="pc-names">
-            <a href="index.html"><div class="cont"><p id="pcname">1</p><h6 id="date" style="text-decoration:overline;"></h6></div></a>
-            <a href="2/"><div class="cont sel"><p id="pcname2">2</p><h6 id="date2" style="text-decoration: none;"></h6></div></a>
+            <a id="pc1" class="sel"><div class="cont"><p id="pcname1">1</p><h6 id="date1" style="text-decoration: none;"></h6></div></a>
+            <a id="pc2" ><div class="cont"><p id="pcname2">2</p><h6 id="date2" style="text-decoration: none;"></h6></div></a>
         </div>
     </div>
 
