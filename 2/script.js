@@ -23,6 +23,62 @@
         };
 
         document.addEventListener('DOMContentLoaded', function() {
+            function syncPcName() {
+                database.ref(`pcname`).on('value', function(snapshot) {
+                    const pcnametext = document.getElementById('pcname');
+                    const pcname = snapshot.val();
+                    if (pcname) {
+                        pcnametext.innerHTML = pcname;
+                    }
+                });
+            }
+
+            function syncPcName2() {
+                database.ref(`pcname2`).on('value', function(snapshot) {
+                    const pcnametext2 = document.getElementById('pcname2');
+                    const pcname2 = snapshot.val();
+                    if (pcname2) {
+                        pcnametext2.innerHTML = pcname2;
+                    }
+                });
+            }
+        
+            syncPcName();
+            syncPcName2();
+
+            function syncDate() {
+                database.ref(`date`).on('value', function(snapshot) {
+                    const datetext = document.getElementById('date');
+                    const date = snapshot.val();
+                    if (date) {
+                        datetext.innerHTML = new Date(date).toLocaleTimeString('it-IT', {
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit'
+                          });
+                    }
+                });
+            }
+
+            function syncDate2() {
+                database.ref(`date2`).on('value', function(snapshot) {
+                    const datetext2 = document.getElementById('date2');
+                    const date2 = snapshot.val();
+                    if (date2) {
+                        datetext2.innerHTML = new Date(date2).toLocaleTimeString('it-IT', {
+                            day: '2-digit',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            second: '2-digit'
+                          });
+                    }
+                });
+            }
+        
+            syncDate();
+            syncDate2();
+            syncPcName2();
+            
             function syncIpAddress() {
                 const input = document.getElementById('ipaddress');
                 const id2Ref = database.ref('id2');
