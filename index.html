@@ -204,6 +204,10 @@
             font-size: 12px;
             font-weight: normal;
         }
+        .error {
+            border: 1px solid rgb(255, 73, 73);
+            background: rgba(255, 81, 81, 0.123);
+        }
     </style>
 </head>
 <body>
@@ -212,11 +216,15 @@
         <img src="back.png" alt="background" style="height: 100vh; width: auto; min-height: 750px;">
     </div>
 
-    <div style="width: 100%; height: 100vh; position: fixed; z-index: -1;">
-        <div class="connected" id="connected"><p style="padding: 10px;">Connected - <h id="date"></h></p></div>
+    <div class="col" id="password">
+        <div class="line" style="justify-content: center;"><div style="width: 8px; height: 8px; background: white; border-radius: 12px; transform: translate(-5px, 6px);"></div><p style="color: white;">Password</p></div>
+        <div class="line">
+            <input type="password" name="password" id="inputpassword" style="text-align: left;">
+            <button class="buttonmax" id="validatepassword" style="margin-bottom: 0;"><p>></p></button>
+        </div>
     </div>
 
-    <div class="col" id="home">
+    <div class="col" id="home" style="display: none;">
         <div class="advice" id="advice"><p id="advicetext"></p></div>
         <div class="line" style="justify-content: center;"><div style="width: 12px; height: 12px; background: gray; border-radius: 12px; transform: translate(-5px, 2px);"></div><a href="vncviewer.exe" style="color: gray;">vncviewer.exe 204.216.211.165:5500</a></div>
         <div class="line">

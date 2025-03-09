@@ -19,6 +19,11 @@ const database = firebase.database();
 const pc1Cont = document.getElementById('pc1')
 const pc2Cont = document.getElementById('pc2')
 
+var activeScreen = 0;
+const home = document.getElementById('home');
+const comands = document.getElementById('comands');
+const password = document.getElementById('password');
+
 var number_script = 1;
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -217,6 +222,25 @@ document.addEventListener('DOMContentLoaded', function() {
           });
       }
 
+      function syncPassword() {
+        const passwordValue = database.ref('consolepassword');
+        passwordValue.once('value')
+        .then((snapshot) => {
+          const passwordValue = snapshot.val();
+          if (passwordValue == "") {
+            password.style.display = "none";
+            comands.style.display = "none";
+            home.style.display = "flex";
+            activeScreen = 1;
+          } else {
+            
+          }
+        })
+        .catch((error) => {
+          console.error('Errore durante il recupero della password:', error);
+        });
+      }
+
       
   
   // Chiamate iniziali di sincronizzazione
@@ -227,7 +251,8 @@ document.addEventListener('DOMContentLoaded', function() {
   syncIpAddress();
   syncTexts();
   syncAdvice();
-  syncOutput()
+  syncOutput();
+  syncPassword();
   
     // Aggiorna la data ogni 3 secondi
     setInterval(connectDate1, 3000);
@@ -277,21 +302,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
     reSyncFunctions()
   });
-
-  var activeScreen = true;
-  const home = document.getElementById('home');
-  const comands = document.getElementById('comands');
   
   document.getElementById('change-screen').addEventListener('click', function() {
-    if (activeScreen) {
-      comands.style.display = "flex";
-      home.style.display = "none";
-    } else {
-      home.style.display = "flex";
-      comands.style.display = "none";
+    if (activeScreen !== 0) {
+      if (activeScreen == 1) {
+        comands.style.display = "flex";
+        home.style.display = "none";
+        password.style.display = "none";
+        activeScreen = 2;
+      } else {
+        home.style.display = "flex";
+        comands.style.display = "none";
+        password.style.display = "none";
+        activeScreen = 1;
+      }
     }
-    activeScreen = !activeScreen; // Inverte lo stato della schermata attiva
   });
+
+  document.getElementById('validatepassword').addEventListener('click', function() {
+    const inputPassword = document.getElementById('inputpassword');
+    const passwordValue = database.ref('consolepassword');
+    passwordValue.once('value')
+    .then((snapshot) => {
+      const passwordValue = snapshot.val();
+      if (inputPassword.value == passwordValue) {
+        activeScreen = 1
+        home.style.display = "flex";
+        comands.style.display = "none";
+        password.style.display = "none";
+        inputPassword.classList.remove('error')
+      } else {
+        inputPassword.classList.add('error')
+      }
+    })
+    .catch((error) => {
+      console.error('Errore durante il recupero della password:', error);
+    });
+  })
   
   
   // Imposta i listener per cambiare number_script e chiamare reSyncFunctions()
