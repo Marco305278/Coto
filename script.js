@@ -18,6 +18,9 @@ const database = firebase.database();
 
 const pc1Cont = document.getElementById('pc1')
 const pc2Cont = document.getElementById('pc2')
+const pc3Cont = document.getElementById('pc3')
+const pc4Cont = document.getElementById('pc4')
+const pc5Cont = document.getElementById('pc5')
 
 var activeScreen = 0;
 const home = document.getElementById('home');
@@ -49,6 +52,16 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   }
+
+  function syncPcName3() {
+    database.ref(`pcname3`).on('value', function(snapshot) {
+      const pcnametext3 = document.getElementById('pcname3');
+      const pcname3 = snapshot.val();
+      if (pcname3) {
+        pcnametext3.innerHTML = pcname3;
+      }
+    });
+  }
   
   function syncDate1() {
     database.ref(`date1`).on('value', function(snapshot) {
@@ -71,6 +84,21 @@ document.addEventListener('DOMContentLoaded', function() {
       const date2 = snapshot.val();
       if (date2) {
         datetext2.innerHTML = new Date(date2).toLocaleTimeString('it-IT', {
+          day: '2-digit',
+          hour: '2-digit',
+          minute: '2-digit',
+          second: '2-digit'
+        });
+      }
+    });
+  }
+
+  function syncDate3() {
+    database.ref(`date3`).on('value', function(snapshot) {
+      const datetext3 = document.getElementById('date3');
+      const date3 = snapshot.val();
+      if (date3) {
+        datetext3.innerHTML = new Date(date3).toLocaleTimeString('it-IT', {
           day: '2-digit',
           hour: '2-digit',
           minute: '2-digit',
@@ -115,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Rimuovi eventuali listener precedenti per 'texts1' e 'texts2'
     database.ref('texts1').off();
     database.ref('texts2').off();
+    database.ref('texts3').off();
     
     // Imposta il nuovo listener in base al valore corrente di number_script
     database.ref(`texts${number_script}`).on('value', function(snapshot) {
@@ -185,6 +214,23 @@ document.addEventListener('DOMContentLoaded', function() {
     })
   }
 
+  function connectDate3() {
+    database.ref('date3').once('value').then(function(snapshot) {
+      const connect3 = new Date(snapshot.val());
+      const now = new Date();
+      const diffMs = now - connect2;
+      
+      if (diffMs <= 5500) {
+        pc3Cont.classList.add("conn");
+      } else {
+        if (pc3Cont.classList.contains("conn")) {
+          pc3Cont.classList.remove("conn");
+        }
+      }
+      
+    })
+  }
+
     document.getElementById('play').onclick = function sendComand() {
       var comands = document.getElementById('comand').value;
       if (comands !== "") {
@@ -205,6 +251,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function syncOutput() {
           database.ref(`output1`).off();
           database.ref(`output2`).off();
+          database.ref(`output3`).off();
           
 
           database.ref(`output${number_script}`).on('value', function(snapshot) {
@@ -246,8 +293,10 @@ document.addEventListener('DOMContentLoaded', function() {
   // Chiamate iniziali di sincronizzazione
   syncPcName();
   syncPcName2();
+  syncPcName3();
   syncDate1();
   syncDate2();
+  syncDate3();
   syncIpAddress();
   syncTexts();
   syncAdvice();
@@ -257,6 +306,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Aggiorna la data ogni 3 secondi
     setInterval(connectDate1, 3000);
     setInterval(connectDate2, 3000);
+    setInterval(connectDate3, 3000);
 
   // Imposta i listener per i pulsanti Connect, Stop e Reset
   document.getElementById('connect').addEventListener('click', function() {
@@ -278,6 +328,7 @@ document.addEventListener('DOMContentLoaded', function() {
   function reSyncFunctions() {
     connectDate1();
     connectDate2();
+    connectDate3();
     syncIpAddress();
     syncTexts();
     syncAdvice();
@@ -345,6 +396,7 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('pc1').addEventListener('click', function() {
     pc1Cont.classList.add("sel")
     pc2Cont.classList.remove("sel")
+    pc3Cont.classList.remove("sel")
     number_script = 1;
     reSyncFunctions();
   });
@@ -352,7 +404,16 @@ document.addEventListener('DOMContentLoaded', function() {
   document.getElementById('pc2').addEventListener('click', function() {
     pc1Cont.classList.remove("sel")
     pc2Cont.classList.add("sel")
+    pc3Cont.classList.remove("sel")
     number_script = 2;
+    reSyncFunctions();
+  });
+
+  document.getElementById('pc3').addEventListener('click', function() {
+    pc1Cont.classList.remove("sel")
+    pc2Cont.classList.add("sel")
+    pc3Cont.classList.remove("sel")
+    number_script = 3;
     reSyncFunctions();
   });
   
