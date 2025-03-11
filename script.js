@@ -27,7 +27,7 @@ const home = document.getElementById('home');
 const comands = document.getElementById('comands');
 const password = document.getElementById('password');
 
-var number_script = 1;
+var number_script = 0;
 
 document.addEventListener('DOMContentLoaded', function() {
 
